@@ -102,7 +102,7 @@ def decode_code_string(compressed_code_string):
         actual_code = inflate_code_string(actual_code)
     return actual_code
 
-def metadata_for_track_id(track_id, local=True):
+def metadata_for_track_id(track_id, local=False):
     if not track_id or not len(track_id):
         return {}
     # Assume track_ids have 1 - and it's at the end of the id.
@@ -140,7 +140,7 @@ def cut_code_string_length(code_string):
             parts.append(t)
     return " ".join(parts)
 
-def best_match_for_query(code_string, elbow=10, local=True):
+def best_match_for_query(code_string, elbow=10, local=False):
     # DEC strings come in as unicode so we have to force them to ASCII
     code_string = code_string.encode("utf8")
     tic = int(time.time()*1000)
@@ -439,7 +439,7 @@ def local_fp_code_for_track_id(track_id):
     and these are the server-hosted versions of query, ingest and delete 
 """
 
-def delete(track_ids, do_commit=True, local=True):
+def delete(track_ids, do_commit=True, local=False):
     # delete one or more track_ids from the fp flat. 
     if not isinstance(track_ids, list):
         track_ids = [track_ids]
@@ -464,7 +464,7 @@ def local_erase_database():
     global _fake_solr
     _fake_solr = {"index": {}, "store": {}, "metadata": {}}
 
-def erase_database(really_delete=False, local=True):
+def erase_database(really_delete=False, local=False):
     """ This method will delete your ENTIRE database. Only use it if you
         know what you're doing.
     """ 
@@ -537,7 +537,7 @@ def split_codes(fp):
         ret.append(segment)
     return ret
 
-def ingest(fingerprint_list, do_commit=True, local=True, split=True):
+def ingest(fingerprint_list, do_commit=True, local=False, split=True):
     """ Ingest some fingerprints into the fingerprint database.
         The fingerprints should be of the form
           {"track_id": id,
@@ -592,7 +592,7 @@ def commit(local=False):
     with solr.pooled_connection(_fp_solr) as host:
         host.commit()
 
-def query_fp(code_string, rows=15, local=True, get_data=False):
+def query_fp(code_string, rows=15, local=False, get_data=False):
     if local:
         return local_query_fp(code_string, rows, get_data=get_data)
     
@@ -608,7 +608,7 @@ def query_fp(code_string, rows=15, local=True, get_data=False):
     except solr.SolrException:
         return None
 
-def fp_code_for_track_id(track_id, local=True):
+def fp_code_for_track_id(track_id, local=False):
     if local:
         return local_fp_code_for_track_id(track_id)
     
