@@ -588,7 +588,7 @@ def ingest(fingerprint_list, do_commit=True, local=True, split=True):
     if do_commit:
         commit()
 
-def commit(local=True):
+def commit(local=False):
     with solr.pooled_connection(_fp_solr) as host:
         host.commit()
 
